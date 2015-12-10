@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>添加接口</title>
+    <meta charset="utf-8">
+    <link rel='stylesheet' href='/css/bootstrap.min.css'/>
+    <link rel="stylesheet" href="/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/css/base.min.css"/>
+    <link rel="stylesheet" href="/css/cmui.min.css"/>
+    <link rel="stylesheet" href="/lib/jsoneditor/dist/jsoneditor.min.css"/>
+    <style>
+        body{
+            font-size: 16px;
+        }
+        header{
+            height: 150px;
+            line-height: 150px;
+            background-image: linear-gradient(to bottom,#563d7c 0,#6f5499 100%);
+            padding-left: 50px;
+        }
+        .client{position: absolute; top: 0; right: 0; bottom: 0; left: 0;}
+        .container{top: 150px;}
+        label.form-label{width: 100px; text-align: right; margin-right: 50px; vertical-align: top;}
+        .interface-form input.form-text{width: 500px;}
+        .form-group{margin-top: 20px;}
+        #template{
+            display: inline-block;
+            border: none; outline: none; background: transparent; width: 520px;
+            resize: none; height: 250px;
+        }
+        .jsoneditor{    border: 1px solid rgba(42,42,42,.3);}
+        .jsoneditor .menu{background-color: white; border-bottom: 1px solid rgba(42,42,42,.3);}
+        .jsoneditor .search .frame{display: none;}
+        .lazyTimeWrap{display: none;}
+    </style>
+</head>
+<body class="bg-gray-lighter">
+<header>
+    <h2 class="d3-text">添加接口</h2>
+</header>
+<div class="container client">
+    <div class="mt-40">
+        <div class="form-inline interface-form">
+            <div class="form-group">
+                <label class="form-label">接口地址: </label>
+                <div class="text-field-wrap white-primary">
+                    <input type="text" class="form-text" value="" id="url">
+                </div>
+            </div><br>
+            <div class="form-group">
+                <div class="radio-group">
+                    <label class="form-label">接口类型: </label>
+                    <input type="radio" value="get" name="type" class="radio-input" id="get" checked>
+                    <label class="form-radio" for="get"></label>
+                    <label>GET</label>
+
+                    <input type="radio" value="post" name="type" class="radio-input" id="post">
+                    <label class="form-radio" for="post"></label>
+                    <label>POST</label>
+                </div>
+            </div><br>
+            <div class="form-group">
+                <div class="radio-group">
+                    <label class="form-label">JSONP: </label>
+                    <input type="radio" value="1" name="jsonp" class="radio-input" id="jsonp1" >
+                    <label class="form-radio" for="jsonp1"></label>
+                    <label>true</label>
+
+                    <input type="radio" value="0" name="jsonp" class="radio-input" id="jsonp2" checked>
+                    <label class="form-radio" for="jsonp2"></label>
+                    <label>false</label>
+                </div>
+            </div><br>
+
+            <div class="form-group">
+                <div class="radio-group">
+                    <label class="form-label">延时加载: </label>
+                    <input type="radio" value="1" name="lazy" class="radio-input" id="lazy1" >
+                    <label class="form-radio" for="lazy1"></label>
+                    <label>true</label>
+
+                    <input type="radio" value="0" name="lazy" class="radio-input" id="lazy2" checked>
+                    <label class="form-radio" for="lazy2"></label>
+                    <label>false</label>
+                </div>
+                <div class="lazyTimeWrap">
+                    <label class="form-label">延时时间: </label>
+                    <div class="text-field-wrap white-primary">
+                        <input type="text" class="form-text" value="0" id="lazyTime">
+                    </div>
+                </div>
+            </div><br>
+
+            <div class="form-group">
+                <label class="form-label">接口描述: </label>
+                <div class="text-field-wrap white-primary">
+                    <input type="text" class="form-text" value="" id="desc">
+                </div>
+            </div><br>
+
+            <div class="form-group">
+                <label class="form-label">接口模板: </label>
+                <div id="template"></div>
+            </div><br>
+        </div>
+
+        <hr>
+
+        <div class="panel panel-default request_panel">
+            <div class="panel-heading">
+                请求参数
+                <i class="fa fa-plus pull-right" id="add_request_param" style="color: sandybrown; cursor:pointer;"></i>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th class="text-center">序号</th>
+                            <th>名称</th>
+                            <th>类型</th>
+                            <th>描述</th>
+                            <th class="text-center">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="text-center">
+            <a class="btn btn-cyan" id="save-btn" style="width: 120px;">保 存</a>
+        </div>
+
+    </div>
+</div>
+
+
+
+<!-- 提示信息弹框 -->
+<div class="modal fade dialog-sm" id="tip-dialog">
+    <div class="modal-dialog">
+        <div class="modal-content bd-muted">
+            <div class="modal-header bg-muted bd-muted">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h5 class="modal-title text-center">提示信息</h5>
+            </div>
+            <div class="modal-body">
+                <span class="message-icon message-icon-info"></span>
+                <span class="message-content"></span>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-cyan btn-sm" id="tip-tbn">确 定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+
+
+<script src="/lib/jquery-1.11.3.min.js"></script>
+<script src="/lib/bootstrap.min.js"></script>
+<script src="/lib/require.js"></script>
+<script src="/js/config.js"></script>
+<script>
+    var projectId = "<%= projectId %>";
+    var editor;
+    require(["common","../lib/jsoneditor/dist/jsoneditor"], function(common, JSONEditor){
+        $("#add_request_param").on("click", function(){
+            appendRequestParamEle();
+        });
+
+        $("#save-btn").on("click", function(){
+            saveInterface();
+        });
+
+        editor = new JSONEditor($("#template")[0]);
+
+        $("input[name='lazy']").on("change", function(){
+            if($(this).val() == "1"){
+                $(".lazyTimeWrap").show();
+            }else{
+                $(".lazyTimeWrap").hide();
+            }
+        });
+
+        $("#tip-tbn").on("click", function(){
+            var ret = $("#tip-dialog").data("success");
+            if(ret){
+                history.go(-1);
+            }
+        });
+    });
+
+    /**
+     * 添加请求参数
+     */
+    function appendRequestParamEle(){
+        var index = $(".request_panel tbody tr").length + 1;
+        var ele = $('<tr>'+
+                '<td class="text-center">'+index+'</td>'+
+                '<td class="form-inline">'+
+                    '<div class="text-field-wrap white-primary">'+
+                    '<input type="text" class="form-text" value="" id="request_name">'+
+                    '</div>'+
+                '</td>'+
+                '<td class="form-inline">'+
+                    '<div class="text-field-wrap white-primary">'+
+                    '<input type="text" class="form-text" value="" id="request_type">'+
+                    '</div>'+
+                '</td>'+
+                '<td class="form-inline">'+
+                    '<div class="text-field-wrap white-primary">'+
+                    '<input type="text" class="form-text" value="" id="request_desc">'+
+                    '</div>'+
+                '</td>'+
+                '<td class="text-center">'+
+                    '<i class="fa fa-minus" style="color: red; cursor:pointer;"></i>'+
+                '</td>'+
+            '</tr>');
+        $(".request_panel tbody").append(ele);
+
+        $(".fa-minus", ele).on("click", function(){
+            doDeleteRequestParam(ele);
+        });
+    }
+
+
+    /**
+     *
+     * @param ele
+     */
+    function doDeleteRequestParam(ele){
+        if(window.confirm("确定删除该参数？")){
+            ele.remove();
+        }
+    }
+
+    /**
+     * 保存
+     */
+    function saveInterface(){
+        var template = editor.get();
+        var inter = {
+            "prj_id": projectId,
+            url: $("#url").val(),
+            type: $("input[name='type']:checked").val(),
+            jsonp: $("input[name='jsonp']:checked").val(),
+            lazy: $("input[name='lazy']:checked").val(),
+            lazyTime: $("#lazyTime").val(),
+            desc: $("#desc").val(),
+            template: JSON.stringify(template)
+        };
+
+        var requestParams = [];
+        $(".request_panel tbody tr").each(function(){
+            var param = {
+                name: $("#request_name", this).val(),
+                type: $("#request_type", this).val(),
+                desc: $("#request_desc", this).val()
+            };
+
+            requestParams.push(param);
+        });
+
+        var responseParams = [];
+        $(".response_panel tbody tr").each(function(){
+            var param = {
+                name: $("#response_name", this).val(),
+                type: $("#response_type", this).val(),
+                rule: $("#response_rule", this).val(),
+                desc: $("#response_desc", this).val()
+            };
+
+            responseParams.push(param);
+        });
+
+        var data = {
+            "interface": JSON.stringify(inter),
+            "request": JSON.stringify(requestParams),
+            "response": JSON.stringify(responseParams)
+        }
+
+        ajaxData("/interface/add", data, function(ret){
+            if(ret.success){
+                showTipDialog("保存成功");
+                $("#tip-dialog").data("success", true);
+            }else{
+                showTipDialog("保存失败");
+                $("#tip-dialog").data("success", false);
+            }
+        });
+
+        return false;
+    }
+</script>
+</body>
+</html>

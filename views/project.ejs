@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= project.alias %>项目接口</title>
+    <meta charset="utf-8">
+    <link rel='stylesheet' href='/css/bootstrap.min.css'/>
+    <link rel="stylesheet" href="/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/css/base.min.css"/>
+    <link rel="stylesheet" href="/css/cmui.min.css"/>
+    <style>
+        body{
+            font-size: 16px;
+        }
+        header{
+            height: 150px;
+            line-height: 150px;
+            background-image: linear-gradient(to bottom,#563d7c 0,#6f5499 100%);
+            padding-left: 50px;
+        }
+        .client{position: absolute; top: 0; right: 0; bottom: 0; left: 0;}
+        .container{top: 150px;}
+        .tile{width: 100%;}
+        .tile span{font-size: 20px;}
+        .fa-link{position: relative; top: 4px;}
+    </style>
+</head>
+<body class="bg-gray-lighter">
+<header>
+    <h2 class="d3-text"><%= project.alias %>项目接口</h2>
+</header>
+<div class="container client">
+    <div class="table-responsive mt-40 left-frame">
+        <div class="interfaceList">
+            <div class="tools text-right mb-20">
+                <a class="btn btn-cyan" href="/interface/interface_add?projectId=<%= project.id %>&_=<%= new Date().getTime() %>">添加接口</a>
+            </div>
+        </div>
+    </div>
+    <div class="right-frame">
+
+    </div>
+</div>
+
+
+
+<!-- 提示信息弹框 -->
+<div class="modal fade dialog-sm" id="tip-dialog">
+    <div class="modal-dialog">
+        <div class="modal-content bd-muted">
+            <div class="modal-header bg-muted bd-muted">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h5 class="modal-title text-center">提示信息</h5>
+            </div>
+            <div class="modal-body">
+                <span class="message-icon message-icon-info"></span>
+                <span class="message-content"></span>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-cyan btn-sm" data-dismiss="modal">确 定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<script src="/lib/jquery-1.11.3.min.js"></script>
+<script src="/lib/bootstrap.min.js"></script>
+<script src="/lib/require.js"></script>
+<script src="/js/config.js"></script>
+<script>
+    var projectId = "<%= project.id %>";
+</script>
+<script src="/js/project.js"></script>
+</body>
+</html>

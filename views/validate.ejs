@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>接口验证</title>
+    <meta charset="utf-8">
+    <link rel='stylesheet' href='/css/bootstrap.min.css'/>
+    <link rel="stylesheet" href="/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/css/base.min.css"/>
+    <link rel="stylesheet" href="/css/cmui.min.css"/>
+    <link rel="stylesheet" href="/lib/code-prettify/loader/prettify.css"/>
+    <style>
+        body{
+            font-size: 16px;
+        }
+        header{
+            height: 150px;
+            line-height: 150px;
+            background-image: linear-gradient(to bottom,#563d7c 0,#6f5499 100%);
+            padding-left: 50px;
+        }
+        .client{position: absolute; top: 0; right: 0; bottom: 0; left: 0;}
+        .container{top: 150px;}
+        .fa-refresh{cursor: pointer; color: #563d7c;}
+        .waring-text{color: red;}
+    </style>
+</head>
+<body class="bg-gray-lighter">
+<header>
+    <h2 class="d3-text">接口验证</h2>
+</header>
+<div class="container client">
+    <div class="mt-40 row">
+
+        <div class="frontEnd col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    接口返回结果
+                    <i class="fa fa-refresh pull-right"></i>
+                </div>
+                <div class="panel-body">
+                    <code class="prettyprint lang-js linenums ">
+                    </code>
+                </div>
+            </div>
+        </div>
+
+        <div class="backEnd col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    请求测试 <span class="waring-text">(涉及session内容的接口,请添加SESSIONID参数)</span>
+                </div>
+                <div class="panel-body">
+                    <div class="input-group">
+                        <label class="input-group-addon"><i class="fa fa-link"></i></label>
+                        <div class="text-field-wrap form-control white-primary">
+                            <span class="placeholder">您的测试地址</span>
+                            <input type="text" class="form-text" value="" id="host">
+                        </div>
+                    </div><br>
+
+                    <div class="params-wrap">
+
+                    </div>
+
+                    <div class="form-group text-right">
+                        <a class="btn btn-cyan" id="btn_post">请 求</a>
+                    </div>
+
+                    <div class="form-group">
+                        返回数据<br>
+                        <code class="prettyprint lang-js linenums" id="responseData">
+                        </code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- 提示信息弹框 -->
+<div class="modal fade dialog-sm" id="tip-dialog">
+    <div class="modal-dialog">
+        <div class="modal-content bd-muted">
+            <div class="modal-header bg-muted bd-muted">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h5 class="modal-title text-center">提示信息</h5>
+            </div>
+            <div class="modal-body">
+                <span class="message-icon message-icon-info"></span>
+                <span class="message-content"></span>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-cyan btn-sm" data-dismiss="modal">确 定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+
+
+<script src="/lib/jquery-1.11.3.min.js"></script>
+<script src="/lib/bootstrap.min.js"></script>
+<script src="/lib/require.js"></script>
+<script src="/js/config.js"></script>
+<script src="/lib/code-prettify/loader/prettify.js"></script>
+
+<script>
+    var projectName = "<%= projectName %>";
+    var url = "<%= url %>";
+    var requestsData = "<%= requests%>";
+
+    $(function(){
+        $(".fa-refresh").on("click", function(){
+            getMockData();
+        }).click();
+
+        appendParams();
+
+        var storage = localStorage.getItem(encodeURI(projectName+"_"+url));
+        if(storage){
+            storage = JSON.parse(storage);
+            $("#host").val(storage.host);
+            for(var key in storage.params){
+                $(".params-wrap .param[data-param='"+key+"']").val(storage.params[key]);
+            }
+        }
+
+        $("#btn_post").on("click", function(){
+            requestData();
+        });
+
+        jQuery(".form-text").on("focus.textfield", function(){
+            $(this).closest(".text-field-wrap").addClass("focus");
+        }).on("blur", function(){
+            $(this).closest(".text-field-wrap").removeClass("focus");
+            if(this.value == ""){
+                $(this).parents(".text-field-wrap").removeClass("filled");
+            }
+        });
+        $(".form-text").each(function(){
+            if(this.value != ""){
+                $(this).prev(".placeholder").hide();
+                $(this).parents(".text-field-wrap").addClass("filled");
+            }
+        });
+        jQuery(".form-text").on("keydown.placeholder", function(){
+            $(this).prev(".placeholder").hide();
+            $(this).parents(".text-field-wrap").addClass("filled");
+        });
+        jQuery(".form-text").on("keyup.placeholder", function(){
+            if(this.value === "") {
+                $(this).prev(".placeholder").show();
+                $(this).parents(".text-field-wrap").removeClass("filled");
+            }else {
+                $(this).prev(".placeholder").hide();
+            }
+        });
+        jQuery(".form-text").on("blur.placeholder", function(){
+            if(this.value === "") {
+                $(this).prev(".placeholder").show();
+            }
+        });
+
+        var ink = $('<span class="ink animate-ink" style=""></span>');
+        $(".btn").on("mousedown", function(e){
+            var w = $(this).outerWidth();
+            ink.css({
+                width: w,
+                height: w,
+                left: -w / 2,
+                top: -w / 2
+            });
+
+            $(this).children(".ink").remove();
+            var left = e.offsetX - w / 2;
+            var top = e.offsetY - w / 2;
+            ink.css({
+                left: left,
+                top: top
+            });
+            ink.prependTo(this);
+        });
+    });
+
+    /**
+     *
+     */
+    function getMockData(){
+        var mockUrl = "/mock/"+projectName+url+"?_="+new Date();
+        $.ajax({
+            url: mockUrl,
+            type: "<%= type %>",
+            dataType: "<%= jsonp ? 'jsonp' : 'json' %>"
+        }).then(function(data){
+            var str = JSON.stringify(data, null, 2);
+            str = str.replace(/\n/g, "<br>");
+            str = str.replace(/\s/g, "&nbsp;");
+            $(".frontEnd code").html(str);
+            PR.prettyPrint();
+        });
+    }
+
+
+    function requestData(){
+        var params = {};
+        $(".param").each(function(){
+            var paramName = $(this).data("param");
+            params[paramName] = $(this).val();
+        });
+        var host = $("#host").val();
+
+        var storage = {
+            host: host,
+            params: params
+        }
+        localStorage.setItem(encodeURI(projectName+"_"+url), JSON.stringify(storage));
+
+        $.ajax({
+            url: "/requestData",
+            type: "post",
+            dataType: "json",
+            data: {
+                type: "<%= type %>",
+                url: encodeURI(host),
+                params: JSON.stringify(params)
+            }
+        }).then(function(ret){
+            if(ret.error){
+                $("#responseData").html(ret.error);
+            }else{
+                var str = JSON.stringify(ret, null, 2);
+                str = str.replace(/\n/g, "<br>");
+                str = str.replace(/\s/g, "&nbsp;");
+                $("#responseData").html(str);
+                PR.prettyPrint();
+            }
+        });
+    }
+
+    function appendParams(){
+        if(requestsData){
+            requestsData = requestsData.replace(/&#34;/g, '"');
+            requestsData = JSON.parse(requestsData);
+
+            requestsData.forEach(function(req){
+                $(".params-wrap").append('<div class="input-group">\
+                    <label class="input-group-addon"><i class="fa fa-code"></i></label>\
+                    <div class="text-field-wrap form-control white-primary">\
+                    <span class="placeholder">参数'+req.name+'</span>\
+                    <input type="text" class="form-text param" value="" data-param="'+req.name+'">\
+                    </div>\
+                    </div><br>');
+            });
+        }
+    }
+</script>
+</body>
+</html>

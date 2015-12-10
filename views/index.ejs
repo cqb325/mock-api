@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CQB.</title>
+    <meta charset="utf-8">
+    <link rel='stylesheet' href='/css/bootstrap.min.css'/>
+    <link rel="stylesheet" href="/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/css/base.min.css"/>
+    <link rel="stylesheet" href="/css/cmui.min.css"/>
+    <style>
+        body{
+            font-size: 16px;
+        }
+        header{
+            height: 150px;
+            line-height: 150px;
+            background-image: linear-gradient(to bottom,#563d7c 0,#6f5499 100%);
+            padding-left: 50px;
+        }
+
+        .client{position: absolute; top: 0; right: 0; bottom: 0; left: 0;}
+        .container{top: 150px; overflow: auto;}
+        .tile{
+            width: 250px;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body class="bg-gray-lighter">
+<header>
+    <h2 class="d3-text">Project List</h2>
+</header>
+<div class="container client">
+    <div class="table-responsive mt-40">
+        <div class="tools text-right mb-20">
+            <a class="btn btn-cyan" data-target="#add-project-dialog" data-toggle="modal">添加项目</a>
+        </div>
+        <div class="projectList">
+
+        </div>
+    </div>
+</div>
+
+<!-- 删除应用 -->
+<div class="modal fade dialog-md" id="add-project-dialog">
+    <div class="modal-dialog" style="width: 400px;">
+        <div class="modal-content bd-muted">
+            <div class="modal-header bg-muted bd-muted">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h5 class="modal-title text-center">添加项目</h5>
+            </div>
+            <div class="modal-body dialog-content">
+                <div class="ml-20 mr-20 mt-20 mb-20">
+                    <div class="input-group">
+                        <label class="input-group-addon">项目名称: </label>
+                        <div class="text-field-wrap form-control white-primary">
+                            <input type="text" class="form-text" value="" id="alias">
+                        </div>
+                    </div><br>
+                    <div class="input-group">
+                        <label class="input-group-addon">项目路径: </label>
+                        <div class="text-field-wrap form-control white-primary">
+                            <input type="text" class="form-text" value="" id="name">
+                        </div>
+                    </div><br>
+                    <div class="form-group text-center">
+                        <a class="btn btn-cyan btn-sm" style="width: 120px;" id="save-btn">保 存</a>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+
+<!-- 提示信息弹框 -->
+<div class="modal fade dialog-sm" id="tip-dialog">
+    <div class="modal-dialog">
+        <div class="modal-content bd-muted">
+            <div class="modal-header bg-muted bd-muted">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h5 class="modal-title text-center">提示信息</h5>
+            </div>
+            <div class="modal-body">
+                <span class="message-icon message-icon-info"></span>
+                <span class="message-content"></span>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-cyan btn-sm" data-dismiss="modal">确 定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<script src="/lib/jquery-1.11.3.min.js"></script>
+<script src="/lib/bootstrap.min.js"></script>
+<script src="/lib/require.js"></script>
+<script src="/js/config.js"></script>
+<script src="/js/index.js"></script>
+</body>
+</html>

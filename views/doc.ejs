@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>接口文档</title>
+    <meta charset="utf-8">
+    <link rel='stylesheet' href='/css/bootstrap.min.css'/>
+    <link rel="stylesheet" href="/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/css/base.min.css"/>
+    <link rel="stylesheet" href="/css/cmui.min.css"/>
+    <link rel="stylesheet" href="/css/md.css"/>
+    <style>
+        body{
+            font-size: 16px;
+        }
+        header{
+            height: 150px;
+            line-height: 150px;
+            background-image: linear-gradient(to bottom,#563d7c 0,#6f5499 100%);
+            padding-left: 50px;
+        }
+        .client{position: absolute; top: 0; right: 0; bottom: 0; left: 0;}
+        .container{top: 150px;}
+        .fa-refresh{cursor: pointer; color: #563d7c;}
+    </style>
+</head>
+<body class="bg-gray-lighter">
+<header>
+    <h2 class="d3-text">接口文档</h2>
+</header>
+<div class="container client">
+    <div class="mt-40 row">
+
+        <div id="readme" class="blob instapaper_body">
+            <div class="markdown-body">
+                <%- html %>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>
