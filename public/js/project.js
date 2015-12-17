@@ -11,6 +11,7 @@
         if(extend_mock){
             try {
                 extend_mock = extend_mock.replace(/&#34;/g,'"');
+                extend_mock = extend_mock.replace(/&#39;/g,"'");
                 extend_mock = JSON.parse(extend_mock);
                 editor.set(extend_mock);
             }catch (e){}

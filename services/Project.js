@@ -80,7 +80,7 @@ module.exports = {
      * @param scope
      */
     updateRule: function(id, extend_mock, callback, scope){
-        this.db.Project.update({extend_mock: extend_mock}, {where: {id: id}}).then(function(err, ret){
+        this.db.Project.update({extend_mock: extend_mock}, {where: {id: id}}).then(function(ret, err){
             if(err){
                 callback.call(scope, false);
             }else{

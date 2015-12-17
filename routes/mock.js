@@ -12,6 +12,20 @@ module.exports = {
         this.Project.getByName(projectName, function(project){
             if(project){
                 var scope = this;
+                var extend_mock = project.extend_mock;
+                try{
+                    var json = JSON.parse(extend_mock);
+                    for(var i in json){
+                        if(typeof json[i] == "string"){
+                            eval("var fun = "+json[i]);
+                            if(typeof fun == "function"){
+                                json[i] = fun;
+                            }
+                        }
+                    }
+
+                    Mock.Random.extend(json);
+                }catch(e){console.log(e);}
                 project.getInterfaces().then(function(interfaces){
                     if(interfaces){
 
