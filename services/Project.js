@@ -70,5 +70,22 @@ module.exports = {
                 callback.call(scope, true);
             }
         });
+    },
+
+    /**
+     * 更新mock规则
+     * @param id
+     * @param extend_mock
+     * @param callback
+     * @param scope
+     */
+    updateRule: function(id, extend_mock, callback, scope){
+        this.db.Project.update({extend_mock: extend_mock}, {where: {id: id}}).then(function(err, ret){
+            if(err){
+                callback.call(scope, false);
+            }else{
+                callback.call(scope, true);
+            }
+        });
     }
 };

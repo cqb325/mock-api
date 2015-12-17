@@ -3,6 +3,7 @@ module.exports = function(sequelize, DataTypes){
     id      : { type: DataTypes.STRING, primaryKey: true },
     name    : DataTypes.STRING,
     alias   : DataTypes.STRING,
-    ct_time : DataTypes.DATE
+    ct_time : DataTypes.DATE,
+    extend_mock: DataTypes.STRING
   });
 };

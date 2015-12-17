@@ -2,9 +2,38 @@
  * Created by qingbiao on 2015-11-27.
  */
 (function(){
-    require(["common"], function(){
+    var editor;
+    require(["common","../lib/jsoneditor/dist/jsoneditor"], function(common, JSONEditor){
         getInterfaceList();
+
+        editor = new JSONEditor($("#template")[0]);
+
+        if(extend_mock){
+            try {
+                extend_mock = extend_mock.replace(/&#34;/g,'"');
+                extend_mock = JSON.parse(extend_mock);
+                editor.set(extend_mock);
+            }catch (e){}
+        }
+
+        $("#save_rule_btn").on("click", function(){
+            saveMockRules();
+        });
     });
+
+    /**
+     *
+     */
+    function saveMockRules(){
+        var data = editor.get();
+        ajaxData("/project/updateRule", {id: projectId, extend_mock: JSON.stringify(data)}, function(ret){
+            if(ret.success){
+                alert("保存成功");
+            }else{
+                alert("保存失败");
+            }
+        });
+    }
 
 
     /**

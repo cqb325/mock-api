@@ -36,5 +36,13 @@ module.exports = {
         this.Project.deleteById(id, function(ret){
             this.res.json({success: ret});
         }, this);
+    },
+
+    "/updateRule": function(){
+        var id = this.get("id");
+        var extend_mock = this.get("extend_mock");
+        this.Project.updateRule(id,extend_mock, function(ret){
+            this.res.json({success: ret});
+        }, this);
     }
 };
