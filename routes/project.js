@@ -28,7 +28,7 @@ module.exports = {
         var prj_id = this.get("prj_id");
         this.Project.get(prj_id, function(project, error){
             var p = project.dataValues;
-            p.extend_mock = p.extend_mock.replace(/\s+/g, "");
+            p.extend_mock = p.extend_mock ? p.extend_mock.replace(/\s+/g, "") : p.extend_mock;
             this.forward('project', {project: p});
         }, this);
     },
