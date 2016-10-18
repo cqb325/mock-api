@@ -4,6 +4,7 @@
 
 var Mock = require("mockjs");
 var path = require("path");
+var nodeurl = require("url");
 
 module.exports = {
     "/:project/*": function(){
@@ -36,7 +37,15 @@ module.exports = {
                                 scope.res.send(resStr);
                             }else {
                                 //跨域
-                                scope.res.setHeader("Access-Control-Allow-Origin", "*");
+                                var obj = nodeurl.parse(scope.req.get("Referer")+"");
+                                var origin = "*";
+                                if(obj.host){
+                                    origin = obj.protocol+"//"+obj.host;
+                                }
+                                scope.res.setHeader("Access-Control-Request-Headers", "Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, content-type, X-E4M-With");
+                                scope.res.setHeader("Access-Control-Request-Method", "GET, POST, OPTIONS");
+                                scope.res.setHeader("Access-Control-Allow-Origin", origin);
+                                scope.res.setHeader("Access-Control-Allow-Credentials", "true");
                                 scope.res.json(data);
                             }
                         }
@@ -65,6 +74,7 @@ module.exports = {
                                     }
 
                                 }catch (e){
+                                    console.log(e);
                                     scope.res.json({"success": false, msg: "/"+url+"接口模板存在问题"});
                                 }
                                 break;
